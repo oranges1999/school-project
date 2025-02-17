@@ -9,6 +9,7 @@ use Inertia\Inertia;
 
 // Frontend Routes
 Route::prefix('admin/')->as('admin.')->group(function(){
+    // Category Routes
     Route::prefix('categories/')
         ->as('categories.')
         ->controller(FrontendCategoryController::class)
@@ -20,6 +21,7 @@ Route::prefix('admin/')->as('admin.')->group(function(){
 
 // Backend Routes
 Route::prefix('api/admin/')->as('api.admin.')->group(function(){
+    // Category Routes
     Route::prefix('categories/')
         ->as('categories.')
         ->controller(BackendCategoryController::class)
