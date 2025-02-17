@@ -3,6 +3,7 @@
         <template #Content>
             <div class="items-center h-full">
                 <h1 class="text-[#1F6391] text-[30px] font-bold">Create Category</h1>
+                <el-button @click.prevent="toCategoryIndex" type="primary">Back</el-button>
                 <el-form
                     :model="form"
                     style="width: 600px"
@@ -49,6 +50,10 @@ const submitForm = () => {
         .catch(error => {
             errors.value = error.response.data.errors;
         });
+}
+
+const toCategoryIndex = () => {
+    router.visit(route('admin.categories.index'));
 }
 </script>
 

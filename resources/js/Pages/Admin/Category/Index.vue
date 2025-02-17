@@ -16,7 +16,7 @@
                                 <th class="w-[20%]">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="categories.length > 0">
                             <tr v-for="category, index in categories" :key="category.id">
                                 <td class="text-center border-r-2">{{ index+1 }}</td>
                                 <td class="text-center border-r-2">{{ category.name }}</td>
@@ -25,6 +25,13 @@
                                 </td>
                                 <td class="text-center">
                                     <el-button @click="confirmDelete(category.id, category.name)" type="danger">Delete</el-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr class="">
+                                <td colspan="4" class="text-center !w-[100px]">
+                                    <p class="mt-[20px]">It's Empty :(</p>
                                 </td>
                             </tr>
                         </tbody>
