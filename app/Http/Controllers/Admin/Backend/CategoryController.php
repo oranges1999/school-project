@@ -26,6 +26,18 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
+    public function update(Category $category, Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $category->name = $request->name;
+        $category->save();
+
+        return response()->json($category, 200);
+    }
+
     public function destroy(Request $request)
     {
         $category = Category::findOrFail($request->id);

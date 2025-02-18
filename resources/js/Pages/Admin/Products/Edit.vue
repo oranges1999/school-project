@@ -2,7 +2,7 @@
     <AdminLayout>
         <template #Content>
             <div>
-                <h1 class="text-[#1F6391] text-[30px] font-bold">Products Creates</h1>
+                <h1 class="text-[#1F6391] text-[30px] font-bold">Products Edit</h1>
                 <div>
                     <el-button @click="toProductIndex" type="primary">Back</el-button>
                 </div>
@@ -58,6 +58,7 @@
                             <input type="file" @change="getImage($event)" />
                         </div>
                         <img v-if="fileUrl" :src="fileUrl" alt="">
+                        <img v-else :src="'http://localhost/storage/'+form.image" alt="">
                         <p v-if="errors.file" class="text-red-500">{{ errors.file[0] }}</p>
                     </el-form-item>
                     <el-form-item label="Status" prop="status">
@@ -73,7 +74,7 @@
                         </div>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click.prevent="submitForm">Create</el-button>
+                        <el-button type="primary" @click.prevent="submitForm">Update</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -88,9 +89,13 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus';
 
-const form = ref({
-    status: false
-})
+const props = defineProps(['product'])
+
+console.log(props.product)
+const form = ref({})
+
+form.value = props.product
+
 const errors = ref({})
 const categories = ref()
 const file = ref()
@@ -119,8 +124,10 @@ const submitForm = () => {
     let formData = new FormData()
     Object.keys(form.value).forEach(key => {
         formData.append(key, form.value[key])
+        console.log(formData)
     })
-    axios.post(route('api.admin.products.store'), formData)
+    formData.append('_method', 'PUT')
+    axios.post(route('api.admin.products.update',{id: form.value.id}), formData)
         .then(response => {
             router.visit(route('admin.products.index'))
             ElMessage({
@@ -131,6 +138,7 @@ const submitForm = () => {
         })
         .catch(error => {
             errors.value = error.response.data.errors;
+            console.log(errors.value)
         })
 }
 </script>

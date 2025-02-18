@@ -19,4 +19,11 @@ class CategoryController extends Controller
     {
         return inertia('Admin/Category/Create');
     }
+
+    public function Edit(Category $category)
+    {
+        return inertia('Admin/Category/Edit',[
+            'category' => $category
+        ]);
+    }
 }

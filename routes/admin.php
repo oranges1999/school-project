@@ -18,6 +18,7 @@ Route::prefix('admin/')->as('admin.')->group(function(){
         ->group(function(){
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
+            Route::get('/edit/{category}', 'edit')->name('edit');
     });
 
     // Products Routes
@@ -27,6 +28,7 @@ Route::prefix('admin/')->as('admin.')->group(function(){
         ->group(function(){
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
+            Route::get('/edit/{product}', 'edit')->name('edit');
         });
 });
 
@@ -39,6 +41,7 @@ Route::prefix('api/admin/')->as('api.admin.')->group(function(){
         ->group(function(){
             Route::get('/get-data', 'getData')->name('get-data');
             Route::post('/store', 'store')->name('store');
+            Route::put('/update/{category}', 'update')->name('update');
             Route::delete('/destroy', 'destroy')->name('destroy');
     });
 
@@ -48,7 +51,8 @@ Route::prefix('api/admin/')->as('api.admin.')->group(function(){
         ->controller(BackendProductController::class)
         ->group(function(){
             Route::get('get-data','getData')->name('get-data');
+            Route::put('/update/{product}', 'update')->name('update');
             Route::post('/store', 'store')->name('store');
-            Route::delete('/destroy','destroy')->name('destroy');
+            Route::delete('/destroy/{product}','destroy')->name('destroy');
         });
 });

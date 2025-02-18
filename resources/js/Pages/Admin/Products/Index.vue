@@ -16,7 +16,8 @@
                                 <th class="border-r-2 w-[15%]">Category</th>
                                 <th class="border-r-2 w-[10%]">Price</th>
                                 <th class="border-r-2 w-[5%]">Status</th>
-                                <th class="border-r-2 w-[20%]">Created at</th>
+                                <th class="border-r-2 w-[10%]">Created at</th>
+                                <th class="border-r-2 w-[5%]">Stock</th>
                                 <th class="">Action</th>
                             </tr>
                         </thead>
@@ -31,14 +32,21 @@
                                 <td class="text-center border-r-2">
                                     {{ new Date(product.created_at).toDateString() }}
                                 </td>
+                                <td class="text-center border-r-2">{{ product.stock }}</td>
                                 <td class="text-center">
-                                    <el-button @click.prevent="confirmDelete(product.id, product.name)" type="danger">Delete</el-button>
+                                    <div>
+                                        <el-button @click.prevent="toEdit(product.id)" type="primary">Edit</el-button>
+                                        <el-button @click.prevent="confirmDelete(product.id, product.name)" type="danger">
+                                            Delete
+                                        </el-button>
+                                    </div>
+                                    
                                 </td>
                             </tr>
                         </tbody>
                         <tbody v-else>
                             <tr class="">
-                                <td colspan="4" class="text-center !w-[100px]">
+                                <td colspan="9" class="text-center !w-[100px]">
                                     <p class="mt-[20px]">It's Empty :(</p>
                                 </td>
                             </tr>
@@ -106,6 +114,10 @@ const confirmDelete = (id, name) => {
         message: 'Delete canceled',
       })
     })
+}
+
+const toEdit = (id) => {
+    router.visit(route('admin.products.edit', {id: id}))
 }
 </script>
 

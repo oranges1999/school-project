@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -15,5 +17,12 @@ class ProductController extends Controller
     public function create()
     {
         return inertia('Admin/Products/Create');
+    }
+    
+    public function edit(Product $product)
+    {
+        return inertia('Admin/Products/Edit',[
+            'product' => $product
+        ]);
     }
 }

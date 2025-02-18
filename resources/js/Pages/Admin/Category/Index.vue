@@ -24,7 +24,9 @@
                                     {{ new Date(category.created_at).toDateString() }}
                                 </td>
                                 <td class="text-center">
-                                    <el-button @click="confirmDelete(category.id, category.name)" type="danger">Delete</el-button>
+                                    {{ console.log(category.id) }}
+                                    <el-button @click.prevent="toCategoryEdit(category.id)" type="primary">Edit</el-button>
+                                    <el-button @click.prevent="confirmDelete(category.id, category.name)" type="danger">Delete</el-button>
                                 </td>
                             </tr>
                         </tbody>
@@ -105,6 +107,10 @@ const confirmDelete = (id, name) => {
         message: 'Delete canceled',
       })
     })
+}
+
+const toCategoryEdit = (id) => {
+    router.visit(route('admin.categories.edit', id));
 }
 </script>
 
