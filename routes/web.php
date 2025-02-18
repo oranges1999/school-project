@@ -1,10 +1,15 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\User\Frontend\ToppageController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return inertia('User/FrontPage/Index');
+// Frontend Routes
+Route::as('user.')->group(function () {
+    Route::controller(ToppageController::class)->group(function () {
+        Route::get('/', 'index')->name('toppage');
+        Route::get('/category/{category}', 'show')->name('category.show');
+        Route::get('/product/{product}', 'showProduct')->name('product.show');
+    });
 });
+
+// Backend Routes
