@@ -23,4 +23,9 @@ class Product extends Model
     protected $casts = [
         'status' => Status::class,
     ];
+
+    public function Categories()
+    {
+        return $this->belongsTo(Category::class,'category_id','id');
+    }
 }
