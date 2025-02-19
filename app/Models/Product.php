@@ -24,8 +24,13 @@ class Product extends Model
         'status' => Status::class,
     ];
 
-    public function Categories()
+    public function categories()
     {
         return $this->belongsTo(Category::class,'category_id','id');
+    }
+
+    public function order()
+    {
+        return $this->belongsToMany(Order::class, 'orders_products', 'product_id', 'order_id');
     }
 }

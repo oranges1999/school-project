@@ -10,6 +10,16 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    private $validate = [
+        'name' => 'required|string|max:255',
+        'description' => 'required|string|max:255',
+        'price' => 'required|integer',
+        'category_id' => 'required|integer',
+        'stock' => 'integer|required',
+        'image' => 'required',
+        'status' => 'integer|required'
+    ];
+    
     public function getData()
     {
         $product = Product::orderBy('created_at','desc')->get();
@@ -18,15 +28,7 @@ class ProductController extends Controller
 
     public function update(Product $product, Request $request)
     {
-        $updateData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'price' => 'required|integer',
-            'category_id' => 'required|integer',
-            'stock' => 'integer|required',
-            'image' => 'required',
-            'status' => 'integer|required'
-        ]);
+        $updateData = $request->validate($this->validate);
         if($request->hasFile('image')){
             $now = date(now());
             $now = str_replace(
@@ -56,15 +58,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         
-        $product = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'price' => 'required|integer',
-            'category_id' => 'required|integer',
-            'stock' => 'integer|required',
-            'image' => 'required',
-            'status' => 'integer|required'
-        ]);
+        $product = $request->validate($this->validate);
         $now = date(now());
         $now = str_replace(
             ' ',

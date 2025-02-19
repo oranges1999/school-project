@@ -32,4 +32,9 @@ class ToppageController extends Controller
             'product' => new ProductResource($product)
         ]);
     }
+
+    public function showCart()
+    {
+        return inertia('User/Cart/Index');
+    }
 }

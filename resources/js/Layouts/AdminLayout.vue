@@ -27,7 +27,3 @@ const navLinks = ref([
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>

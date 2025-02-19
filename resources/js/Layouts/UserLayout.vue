@@ -2,7 +2,6 @@
 import { Link, usePage, router } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
-
 const page = usePage()
 
 const categories = computed(() => page.props.categories.data)
@@ -39,7 +38,7 @@ const categories = computed(() => page.props.categories.data)
                 <Link href="">
                     <img src="/Image/Profile.svg" alt="">
                 </Link>
-                <Link href="">
+                <Link :href="route('user.cart.show')">
                     <img src="/Image/Cart.svg" alt="">
                 </Link>
             </div>
