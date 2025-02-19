@@ -54,7 +54,9 @@
 
 <script setup>
 import UserLayout from '@/Layouts/UserLayout.vue';
+import { ElMessage } from 'element-plus';
 import { ref } from 'vue'
+import { router } from '@inertiajs/vue3';
 
 const cart = ref(JSON.parse(localStorage.getItem('cart'))??[])
 const cartSummary = ref(0)
@@ -62,26 +64,42 @@ cart.value.forEach(element => {
     cartSummary.value += element.qty * element.price
 });
 
-const productId = ref([])
+let productId = []
 cart.value.forEach(product => {
-    productId.value.push(product.id)
+    productId.push(product.id)
 });
 
 const form = ref({
-    product: productId.value
+    total: cartSummary.value,
+    product: productId
 })
 
 const errors = ref({})
 
 const submitForm = () => {
-    axios.post(route('api.user.order.store'),form.value)
-        .then(response => {
-
+    if(cart.value.length > 0){
+        axios.post(route('api.user.order.store'),form.value)
+            .then(response => {
+                localStorage.removeItem('cart')
+                router.visit(route('user.toppage'))
+                ElMessage({
+                    type: 'success',
+                    message: 'Order has been placed',
+                })
+            })
+            .catch(error => {
+                errors.value = error.response.data.errors
+                ElMessage({
+                    type: 'error',
+                    message: 'Something wrong, please check again',
+                })
+            })
+    } else {
+        ElMessage({
+            type: 'error',
+            message: 'Your cart is empty',
         })
-        .catch(error => {
-            console.log(error)
-        })
-    console.log(form.value)
+    }
 }
 </script>
 

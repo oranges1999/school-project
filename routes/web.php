@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\User\BackEnd\OrderController;
+use App\Http\Controllers\User\Backend\OrderController;
 use App\Http\Controllers\User\Frontend\ToppageController;
 use Illuminate\Support\Facades\Route;
 

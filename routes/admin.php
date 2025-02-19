@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Frontend\CategoryController as FrontendCategoryCo
 use App\Http\Controllers\Admin\Backend\CategoryController as BackendCategoryController;
 use App\Http\Controllers\Admin\Frontend\ProductController as FrontendProductController;
 use App\Http\Controllers\Admin\Backend\ProductController as BackendProductController;
+use App\Http\Controllers\Admin\Frontend\OrderController as FrontendOrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,14 @@ Route::prefix('admin/')->as('admin.')->group(function(){
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::get('/edit/{product}', 'edit')->name('edit');
+        });
+
+    // Orders Routes
+    Route::prefix('orders/')
+        ->as('orders.')
+        ->controller(FrontendOrderController::class)
+        ->group(function(){
+            Route::get('/', 'index')->name('index');
         });
 });
 

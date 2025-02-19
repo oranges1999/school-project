@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders_products', function(Blueprint $table){
-            $table->foreign('order_id')->references('id')->on('orders');
-            $table->foreign('product_id')->references('id')->on('products');
+        Schema::create('orders_products', function (Blueprint $table) {
+            $table->foreignId('order_id')->constrained();
+            $table->foreignId('product_id')->constrained();
         });
     }
 
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('orders_products');
     }
 };

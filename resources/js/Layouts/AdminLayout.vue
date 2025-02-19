@@ -10,6 +10,10 @@ const navLinks = ref([
     {
         title: 'Product',
         route: 'admin.products.index'
+    },
+    {
+        title: 'Order',
+        route: 'admin.orders.index'
     }
 ])
 
