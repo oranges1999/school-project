@@ -5,6 +5,7 @@ import { computed } from 'vue';
 const page = usePage()
 
 const categories = computed(() => page.props.categories.data)
+const user = computed(() => page.props.auth.user)
 </script>
 
 <template>
@@ -22,22 +23,27 @@ const categories = computed(() => page.props.categories.data)
                     >
                         All product
                     </Link>
-                    <div 
+                    <div
                         v-for="category in categories" 
-                        :key="category.id" 
-                        class="text-[white] px-[10px] text-[20px] cursor-pointer"
-                        @click="router.visit(route('user.category.show', category.id))"
+                        :key="category.id"
                     >
-                        <p v-if="category.products.length > 0">
-                            {{ category.name }}
-                        </p>
+                        <div 
+                            v-if="category.products.length > 0" 
+                            class="text-[white] px-[10px] text-[20px] cursor-pointer"
+                            @click="router.visit(route('user.category.show', category.id))"
+                        >
+                            <p>
+                                {{ category.name }}
+                            </p>
+                        </div>
                     </div>
+                    
                 </div>
             </div>
             <div class="absolute top-5 right-0 flex justify-around w-[155px]">
-                <Link href="">
+                <div class="cursor-pointer" @click.prevent="toProfile">
                     <img src="/Image/Profile.svg" alt="">
-                </Link>
+                </div>
                 <Link :href="route('user.cart.show')">
                     <img src="/Image/Cart.svg" alt="">
                 </Link>
