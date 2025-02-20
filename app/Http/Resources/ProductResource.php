@@ -25,7 +25,8 @@ class ProductResource extends JsonResource
             'image' => asset('storage/'.$this->image),
             'stock' => $this->stock,
             'status' => $this->status->label(),
-            'created_at'=> $this->created_at
+            'created_at'=> $this->created_at,
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),
         ];
     }
 }

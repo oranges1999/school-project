@@ -4,6 +4,7 @@ use App\Http\Controllers\User\Frontend\OrderController as FrontendOrderControlle
 use App\Http\Controllers\User\Backend\OrderController as BackendOrderController;
 use App\Http\Controllers\User\Frontend\AuthenticatedController as FrontendAuthenticatedController;
 use App\Http\Controllers\User\Backend\AuthenticatedController as BackendAuthenticatedController;
+use App\Http\Controllers\User\Backend\CommentController;
 use App\Http\Controllers\User\Frontend\ProfileController as FrontendProfileController;
 use App\Http\Controllers\User\Backend\ProfileController as BackendProfileController;
 use App\Http\Controllers\User\Frontend\ToppageController;
@@ -46,6 +47,8 @@ Route::middleware('web')->group(function() {
     
     // Backend Routes
     Route::as('api.user.')->group(function() {
+        Route::post('/search',[ToppageController::class, 'search'])->name('search');
+
         // Authenticated User
         Route::middleware('auth:web')->group(function() {
             Route::controller(BackendOrderController::class)
@@ -66,6 +69,10 @@ Route::middleware('web')->group(function() {
                     Route::put('/update/{user}', 'updateProfile')->name('update');
                     Route::put('/change-password/{user}', 'updatePassword')->name('change-password');
                 });
+
+            Route::post('/comment/store/{product}', [CommentController::class, 'store'])->name('comment.store');
+            Route::delete('/comment/destroy/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
+            Route::get('api/product/{product}', [ToppageController::class, 'apiGetProductData'])->name('product.show');
         });
 
         // Guest User

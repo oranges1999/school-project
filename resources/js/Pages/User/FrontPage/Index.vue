@@ -12,6 +12,7 @@
     <UserLayout>
         <template #Content>
             <div class="flex flex-col h-full overflow-y-scroll">
+                
                 <div v-for="category in categories" :key="category.id">
                     <div v-if="category.products.length > 0">
                         <h2 class="text-[24px] font-bold">{{ category.name }}</h2>
@@ -33,7 +34,8 @@
                                         />
                                     </div>
                                     <div class="h-full w-full flex flex-col justify-center items-center">
-                                        <p class="text-[20px]">Price: {{ product.price }} VND</p>
+                                        <p v-if="product.stock > 0" class="text-[20px]">Price: {{ product.price }} VND</p>
+                                        <p v-else class="text-[20px] text-red-500">Out of stock</p>
                                         <h3 class="text-[20px] font-bold">{{ product.name }}</h3>
                                     </div>
                                 </Link>

@@ -1,6 +1,6 @@
 <script setup>
 import { Link, usePage, router } from '@inertiajs/vue3';
-import { computed, onMounted } from 'vue';
+import { computed, ref } from 'vue';
 
 const page = usePage()
 
@@ -15,6 +15,28 @@ const logout = () => {
         .catch(error => {
             console.log(error)
         })
+}
+
+const showSearchResult = ref(false)
+const searchResultActive = () => {
+    showSearchResult.value = true
+}
+const searchResultInactive = () => {
+    showSearchResult.value = false
+}
+
+const search = ref('')
+const products = ref()
+const getSearchData = () => {
+    if(search.value != ''){
+        axios.post(route('api.user.search'),{search: search.value})
+        .then(response => {
+            products.value = response.data
+        })
+        .catch(error => {
+
+        })
+    }
 }
 </script>
 
@@ -87,6 +109,30 @@ const logout = () => {
                     All product
                 </slot>
             </p>
+        </div>
+        <div class="relative flex justify-end">
+            <div class="flex">
+                <el-input v-model="search" style="width: 240px" placeholder="Search something ..."  @change="getSearchData"/>
+                <!-- <el-button 
+                    type="primary" 
+                    @click.prevent="getSearchData"
+                    @blur="searchResultInactive"
+                >
+                    Search
+                </el-button> -->
+            </div>
+            <div v-if="search != ''" class="absolute top-[100%] bg-[#D9D9D9] w-[315.8px]">
+                <template v-for="product, index in products" :key="index">
+                    <Link class="flex" :href="route('user.product.show',product.id)">
+                        <img :src="product.image" alt="" class="w-[100px]">
+                        <div>
+                            <p>{{ product.name }}</p>
+                            <p>{{ product.price }} VND</p>
+                            <p v-if="product.stock == 0" class="text-red-500">Out of stock!</p>
+                        </div>
+                    </Link>
+                </template>
+            </div>
         </div>
         <!-- Main Content -->
         <div class="w-full custom-h-screen bg-white">

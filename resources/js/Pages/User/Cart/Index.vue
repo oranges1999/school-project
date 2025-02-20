@@ -29,13 +29,19 @@
                             <th class="border border-gray-300">Price</th>
                             <th class="border border-gray-300">Qty</th>
                             <th class="border border-gray-300">Total</th>
+                            <th class="border border-gray-300">Action</th>
                         </thead>
                         <tbody>
                             <tr v-for="product, index in cart" :key="index">
                                 <td class="text-center border border-gray-300">{{ product.name }}</td>
                                 <td class="text-center border border-gray-300">{{ product.price }} VND</td>
-                                <td class="text-center border border-gray-300">{{ product.qty }}</td>
+                                <td class="text-center border border-gray-300">
+                                    <el-input-number v-model="product.qty" :min="1" :max="product.max" @change="calculateTotal()" />
+                                </td>
                                 <td class="text-center border border-gray-300">{{ product.price * product.qty }} VND</td>
+                                <td class="text-center border border-gray-300">
+                                    <el-button type="danger" @click.prevent="openConfirmDelete(index)">Delete</el-button>
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot class="border border-gray-300">
@@ -60,7 +66,7 @@
 
 <script setup>
 import UserLayout from '@/Layouts/UserLayout.vue';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { computed, ref } from 'vue'
 import { usePage, router } from '@inertiajs/vue3';
 
@@ -68,9 +74,14 @@ const cart = ref(JSON.parse(localStorage.getItem('cart'))??[])
 const page = usePage()
 const user = computed(() => page.props.auth.user)
 const cartSummary = ref(0)
-cart.value.forEach(element => {
-    cartSummary.value += element.qty * element.price
-});
+const calculateTotal = () => {
+    cartSummary.value = 0
+    cart.value.forEach(element => {
+        cartSummary.value += element.qty * element.price
+    });
+}
+calculateTotal()
+
 
 const form = ref({
     total: cartSummary.value,
@@ -95,10 +106,15 @@ const submitForm = () => {
                 })
             })
             .catch(error => {
-                errors.value = error.response.data.errors
+                const message = ref("An error occurred")
+                if(error.response.status == 422){
+                    errors.value = error.response.data.errors
+                } else {
+                    message.value = error.response.data.message
+                }
                 ElMessage({
                     type: 'error',
-                    message: 'Something wrong, please check again',
+                    message: message.value,
                 })
             })
     } else {
@@ -107,6 +123,25 @@ const submitForm = () => {
             message: 'Your cart is empty',
         })
     }
+}
+
+const openConfirmDelete = (index) => {
+    ElMessageBox.confirm(
+    'Are you sure to remove this item from cart?',
+    'Warning',
+    {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+    }
+    )
+    .then(() => {
+        cart.value.splice(index, 1)
+        localStorage.setItem('cart', JSON.stringify(cart.value))
+        calculateTotal()
+    })
+    .catch(() => {
+    })
 }
 
 const toLoginPage = () => {

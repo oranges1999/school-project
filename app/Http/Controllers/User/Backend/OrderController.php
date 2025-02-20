@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,12 @@ class OrderController extends Controller
         ]);
         $orderData = Arr::only($data, ['name', 'address', 'phone_number', 'total']);
         $products = Arr::only($data,'product');
+        foreach($products['product'] as $product){
+            $dbProduct = Product::find($product['id']);
+            if($dbProduct->stock < $product['qty']){
+                return response()->json(['message' => 'Product out of stock'], 400);
+            }
+        }
         DB::beginTransaction();
         try {
             $order = Order::create([
@@ -35,6 +42,9 @@ class OrderController extends Controller
                     'qty' => $product['qty'],
                     'price' => $product['price']
                 ]);
+                $dbProduct = Product::find($product['id']);
+                $dbProduct->stock = $dbProduct->stock - $product['qty'];
+                $dbProduct->save();
             }
             DB::commit();
             return response()->json([],200);
