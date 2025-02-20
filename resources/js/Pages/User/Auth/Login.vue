@@ -14,7 +14,7 @@
                             <p v-if="errors.email" class="text-red-500">{{ errors.email[0] }}</p>
                         </el-form-item>
                         <el-form-item label="Password" prop="password">
-                            <el-input v-model="form.password"></el-input>
+                            <el-input v-model="form.password" type="password" show-password/>
                             <p v-if="errors.password" class="text-red-500">{{ errors.password[0] }}</p>
                         </el-form-item>
                         <div class="flex flex-col items-center">
@@ -36,12 +36,28 @@
 import UserLayout from '@/Layouts/UserLayout.vue';
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3';
+import { ElMessage } from 'element-plus';
 
 const form = ref({})
 const errors = ref({})
 
 const submitForm = () => {
-    console.log('dsadas')
+    axios.post(route('api.user.auth.login'), form.value)
+        .then(response => {
+            ElMessage({
+                type: 'success',
+                message: 'Login success',
+            })
+            let redirectUrl = route().params?.url
+            if(redirectUrl){
+                router.visit(redirectUrl)
+            }  else {
+                router.visit(route('user.toppage'))
+            }
+        })
+        .catch(error => {
+            errors.value = error.response.data.errors;
+        })
 }
 
 const toSignupPage = () => {

@@ -9,18 +9,20 @@
                     label-width="120px"
                     class="mt-10"
                 >
-                    <el-form-item label="Name" prop="name">
-                        <el-input v-model="form.name"/>
-                        <p v-if="errors.name" class="text-red-500">{{ errors.name[0] }}</p>
-                    </el-form-item>
-                    <el-form-item label="Phone number" prop="phone_number">
-                        <el-input v-model="form.phone_number"/>
-                        <p v-if="errors.phone_number" class="text-red-500">{{ errors.phone_number[0] }}</p>
-                    </el-form-item>
-                    <el-form-item label="Address" prop="address">
-                        <el-input v-model="form.address"/>
-                        <p v-if="errors.address" class="text-red-500">{{ errors.address[0] }}</p>
-                    </el-form-item>
+                    <div v-if="user != null">
+                        <el-form-item label="Name" prop="name">
+                            <el-input v-model="user.name"/>
+                            <p v-if="errors.name" class="text-red-500">{{ errors.name[0] }}</p>
+                        </el-form-item>
+                        <el-form-item label="Phone number" prop="phone_number">
+                            <el-input v-model="user.phone_number"/>
+                            <p v-if="errors.phone_number" class="text-red-500">{{ errors.phone_number[0] }}</p>
+                        </el-form-item>
+                        <el-form-item label="Address" prop="address">
+                            <el-input v-model="user.address"/>
+                            <p v-if="errors.address" class="text-red-500">{{ errors.address[0] }}</p>
+                        </el-form-item>
+                    </div>
                     <table class="w-full border-collapse border border-gray-400">
                         <thead>
                             <th class="border border-gray-300">Product</th>
@@ -43,7 +45,11 @@
                             </tr>
                         </tfoot>
                     </table>
-                    <div class="w-full flex justify-center">
+                    <div v-if="user === null" class="w-full flex flex-col items-center justify-center">
+                        <p>Login to place order</p>
+                        <el-button type="primary" @click.prevent="toLoginPage">Login</el-button>
+                    </div>
+                    <div v-else class="w-full flex justify-center">
                         <el-button type="primary" @click.prevent="submitForm">Create</el-button>
                     </div>
                 </el-form>
@@ -55,30 +61,31 @@
 <script setup>
 import UserLayout from '@/Layouts/UserLayout.vue';
 import { ElMessage } from 'element-plus';
-import { ref } from 'vue'
-import { router } from '@inertiajs/vue3';
+import { computed, ref } from 'vue'
+import { usePage, router } from '@inertiajs/vue3';
 
 const cart = ref(JSON.parse(localStorage.getItem('cart'))??[])
+const page = usePage()
+const user = computed(() => page.props.auth.user)
 const cartSummary = ref(0)
 cart.value.forEach(element => {
     cartSummary.value += element.qty * element.price
 });
 
-let productId = []
-cart.value.forEach(product => {
-    productId.push(product.id)
-});
-
 const form = ref({
     total: cartSummary.value,
-    product: productId
+    product: cart.value,
 })
 
 const errors = ref({})
 
 const submitForm = () => {
+    const formData = ref({
+        ...form.value,
+        ...user.value,
+    })
     if(cart.value.length > 0){
-        axios.post(route('api.user.order.store'),form.value)
+        axios.post(route('api.user.order.store'),formData.value)
             .then(response => {
                 localStorage.removeItem('cart')
                 router.visit(route('user.toppage'))
@@ -100,6 +107,11 @@ const submitForm = () => {
             message: 'Your cart is empty',
         })
     }
+}
+
+const toLoginPage = () => {
+    let currentUrl = window.location.href
+    router.visit(route('user.auth.login',{url:currentUrl}))
 }
 </script>
 

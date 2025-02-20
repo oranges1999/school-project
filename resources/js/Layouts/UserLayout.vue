@@ -1,11 +1,21 @@
 <script setup>
 import { Link, usePage, router } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 const page = usePage()
 
 const categories = computed(() => page.props.categories.data)
 const user = computed(() => page.props.auth.user)
+
+const logout = () => {
+    axios.post(route('api.user.auth.logout'))
+        .then(response => {
+            window.location.reload()
+        })
+        .catch(error => {
+            console.log(error)
+        })
+}
 </script>
 
 <template>
@@ -41,9 +51,30 @@ const user = computed(() => page.props.auth.user)
                 </div>
             </div>
             <div class="absolute top-5 right-0 flex justify-around w-[155px]">
-                <div class="cursor-pointer" @click.prevent="toProfile">
+                <el-dropdown>
                     <img src="/Image/Profile.svg" alt="">
-                </div>
+                    <template #dropdown>
+                        <el-dropdown-menu v-if="user != null">
+                            <el-dropdown-item>
+                                <Link :href="route('user.order.index')">Your order</Link>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <Link :href="route('user.profile.index')">Profile</Link>
+                            </el-dropdown-item>
+                            <el-dropdown-item @click.prevent="logout">
+                                Log out
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                        <el-dropdown-menu v-else>
+                            <el-dropdown-item>
+                                <Link :href="route('user.auth.login')">Login</Link>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <Link :href="route('user.auth.register')">Signup</Link>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
                 <Link :href="route('user.cart.show')">
                     <img src="/Image/Cart.svg" alt="">
                 </Link>

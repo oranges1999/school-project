@@ -1,8 +1,11 @@
 <?php
 
+use App\Route;
+use App\RouteConst;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,6 +21,20 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
+        
+        $middleware->api([
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
+
+        $middleware->redirectTo(
+            guests: function(Request $request) {
+                $fullUrl = $request->fullUrl();
+                if($request->is('admin') || $request->is('admin/*')){
+                    return;
+                }
+                return RouteConst::USER->value . "?url=$fullUrl";
+            }
+        );
 
         //
     })
