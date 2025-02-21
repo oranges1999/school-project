@@ -34,7 +34,7 @@ Route::middleware('web')->group(function() {
         });
 
         // Guest User
-        Route::middleware('guest')->group(function(){
+        Route::middleware('guest:web')->group(function(){
             Route::as('auth.')
                 ->controller(FrontendAuthenticatedController::class)
                 ->group(function () {
@@ -76,7 +76,7 @@ Route::middleware('web')->group(function() {
         });
 
         // Guest User
-        Route::middleware('guest')->group(function() {
+        Route::middleware('guest:web')->group(function() {
             Route::controller(BackendAuthenticatedController::class)
                 ->as('auth.')
                 ->group(function () {

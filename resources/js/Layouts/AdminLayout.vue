@@ -4,6 +4,10 @@ import { ref } from 'vue';
 
 const navLinks = ref([
     {
+        title: 'Overview',
+        route: 'admin.overview.index'
+    },
+    {
         title: 'Category',
         route: 'admin.categories.index'
     },

@@ -113,13 +113,6 @@ const getSearchData = () => {
         <div class="relative flex justify-end">
             <div class="flex">
                 <el-input v-model="search" style="width: 240px" placeholder="Search something ..."  @change="getSearchData"/>
-                <!-- <el-button 
-                    type="primary" 
-                    @click.prevent="getSearchData"
-                    @blur="searchResultInactive"
-                >
-                    Search
-                </el-button> -->
             </div>
             <div v-if="search != ''" class="absolute top-[100%] bg-[#D9D9D9] w-[315.8px]">
                 <template v-for="product, index in products" :key="index">
@@ -149,6 +142,6 @@ const getSearchData = () => {
 
 <style scoped>
 .custom-h-screen {
-    height: calc(100vh - 286px);
+    height: calc(100vh - 286px - 32px);
 }
 </style>

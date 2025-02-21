@@ -14,7 +14,7 @@
                             <div>Phone number: {{ order.phone_number }}</div>
                             <div>Address: {{ order.address }}</div>
                             <div>Date: {{ new Date(order.created_at).toDateString() }}</div>
-                            <div>Processor: {{ order.admin_id }}</div>
+                            <div>Shipper: {{ order.admin_id }}</div>
                             <div>Status: {{ order.status }}</div>
                         </div>
                     </div>

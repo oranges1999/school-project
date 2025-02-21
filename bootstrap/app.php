@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminRoleMiddleware;
 use App\Route;
 use App\RouteConst;
 use Illuminate\Foundation\Application;
@@ -30,11 +31,15 @@ return Application::configure(basePath: dirname(__DIR__))
             guests: function(Request $request) {
                 $fullUrl = $request->fullUrl();
                 if($request->is('admin') || $request->is('admin/*')){
-                    return;
+                    return RouteConst::ADMIN->value . "?url=$fullUrl";
                 }
                 return RouteConst::USER->value . "?url=$fullUrl";
             }
         );
+
+        $middleware->alias([
+            'adminRole' => AdminRoleMiddleware::class
+        ]);
 
         //
     })
